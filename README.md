@@ -30,7 +30,7 @@ make run
 Enfim, para executar a API, basta executar o comando acima. Ela estará escutando a porta 8000, logo o Swagger estará acessível em http://localhost:8000/docs.
 
 
-# Docker compose
+### Docker compose
 Também é possível executar utilizando o docker compose, para caso não tenha instalado o Makefile, ou se apenas preferir utilizar o compose.
 Apenas rode o comando a seguir e todos os 3 serviços serão executados em ordem.
 ```bash
@@ -38,6 +38,33 @@ docker compose up
 ```
 Após o Keycloak executar, será possível acessá-lo pela url http://localhost:8080. O usuário e senha são "admin", "admin", respectivamente.
 A API estará escutando a porta 8000, logo o Swagger estará acessível em http://localhost:8000/docs.
+
+### Kubernetes
+É possível executar via Kubernetes também. Para isso, é necessário estar conectado a um cluster Kubernetes.
+É necessário também ter instalado o Helm e o Kubectl.
+
+Para executar utilizando helm chart, primeiro, precisaremos buildar a imagem da api com o comando:
+```bash
+docker build -t api_wishlist -f docker/Dockerfile .
+```
+
+Após isso, execute o comando de instalação dos charts:
+```bash
+helm install wishlist ./wishlist-chart --namespace wishlist --create-namespace
+```
+
+Caso queira remover o chart, rode:
+```bash
+helm uninstall wishlist 
+```
+
+Para ser possível acessar as portas que estão dentro do Kubernetes, vamos usar o port forward do kubectl para os serviços do Keycloak e da API:
+```bash
+kubectl port-forward svc/wishlist-keycloak 8080:8080
+kubectl port-forward svc/wishlist-api 8000:8000
+```
+Com isso, o Keycloak e a API estarão disponíveis nas portas 8080 e 8000 respectivamente.
+O usuário e senha do Keycloak são "admin", "admin", respectivamente.
 
 ## Testando
 Na API, teremos o CRUD de clientes, e mais três endpoints para manipulação da lista de favoritos. Um para consultar (por cliente), um para adicionar e outro para remover. Temos também um endpoint para buscar os produtos que estão mockados em products.json, na raiz do repositório.

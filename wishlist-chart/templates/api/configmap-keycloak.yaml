@@ -1,0 +1,15 @@
+apiVersion: v1
+
+kind: ConfigMap
+
+metadata:
+  name: api-configmap-keycloak
+  namespace: {{ .Release.Namespace }}
+
+data:
+  KEYCLOAK_BASE_URL: {{ .Values.keycloak.internalUrl }}
+  KEYCLOAK_PUBLIC_BASE_URL: {{ .Values.keycloak.externalUrl }}
+
+  KEYCLOAK_REALM: {{ .Values.keycloak.realm.name }}
+  KEYCLOAK_CLIENT_ID: {{ .Values.keycloak.realm.api.clientName }}
+  KEYCLOAK_CLIENT_SECRET: {{ .Values.keycloak.realm.api.clientSecret }}

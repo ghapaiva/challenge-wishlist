@@ -1,0 +1,5 @@
+
+{{- define "keycloak.init-container" -}}
+- image: curlimages/curl
+  command: ['sh', '-c', 'until curl -sf http://wishlist-keycloak:8080/realms/master; do echo "Waiting for Keycloak..."; sleep 2; done;']
+{{- end }}

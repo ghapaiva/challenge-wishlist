@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: wishlist-keycloak
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wishlist-keycloak
+  template:
+    metadata:
+      labels:
+        app: wishlist-keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: {{ .Values.keycloak.image }}
+          ports:
+            - containerPort: {{ .Values.keycloak.port }}
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: {{ .Values.keycloak.adminUser }}
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: {{ .Values.keycloak.adminPassword }}
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL_HOST
+              value: wishlist-postgres
+            - name: KC_DB_URL_DATABASE
+              value: {{ .Values.postgres.dbName }}
+            - name: KC_DB_USERNAME
+              value: {{ .Values.postgres.user }}
+            - name: KC_DB_PASSWORD
+              value: {{ .Values.postgres.password }}
+          # command: ["start-dev"]
+          args: ["start-dev"]

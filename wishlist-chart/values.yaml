@@ -1,0 +1,36 @@
+namespace: wishlist
+
+env:
+  ENV: dev
+  DEBUG: 1
+
+postgres:
+  image: postgres:15
+  user: root
+  password: root
+  dbName: wishlist_keycloak_db
+  host: wishlist-postgres
+  port: 5432
+  volumeSize: 1Gi
+
+keycloak:
+  image: quay.io/keycloak/keycloak:26.3.2
+  adminUser: admin
+  adminPassword: admin
+  port: 8080
+
+  internalUrl: http://wishlist-keycloak:8080
+  externalUrl: http://localhost:8080
+
+  realm:
+    name: wishlist
+    api:
+      clientName: wishlist-api
+      clientSecret: qbgFAV7UqAzBj7yETqpLCs2RvpS4f4Hm
+
+api:
+  image: api_wishlist:latest
+  port: 8000
+  replicas: 1
+  env:
+    DATABASE_NAME: wishlist_db

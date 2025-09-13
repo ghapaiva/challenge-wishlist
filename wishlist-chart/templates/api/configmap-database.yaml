@@ -1,0 +1,15 @@
+apiVersion: v1
+
+kind: ConfigMap
+
+metadata:
+  name: api-configmap-database
+  namespace: {{ .Release.Namespace }}
+
+data:
+  DATABASE_HOST: {{ .Values.postgres.host }}
+  DATABASE_PORT: {{ .Values.postgres.port | quote }}
+  DATABASE_DIALECT: "postgresql"
+  DATABASE_NAME: {{ .Values.api.env.DATABASE_NAME }}
+  DATABASE_USER: {{ .Values.postgres.user }}
+  DATABASE_PASSWORD: {{ .Values.postgres.password }}

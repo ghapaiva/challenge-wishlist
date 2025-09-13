@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  postgres_wishlist:
+    image: postgres:15
+    container_name: postgres_wishlist
+    hostname: postgres_wishlist
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+    volumes:
+      - ./volumes/postgres_wishlist:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dev_network
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.2
+    container_name: wishlist_keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres_wishlist
+      KC_DB_URL_DATABASE: wishlist_keycloak_db
+      KC_DB_USERNAME: ${POSTGRES_USER:-root}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-root}
+    networks:
+      - dev_network
+    ports:
+      - "8080:8080"
+    command: start-dev
+    depends_on:
+      postgres_wishlist:
+        condition: service_healthy
+
+  api_wishlist:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: api_wishlist
+    env_file:
+      - ./.env
+    volumes:
+      - ./:/home/app
+    networks:
+      - dev_network
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres_wishlist:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+
+networks:
+  dev_network:
+    driver: bridge

@@ -30,7 +30,16 @@ make run
 Enfim, para executar a API, basta executar o comando acima. Ela estará escutando a porta 8000, logo o Swagger estará acessível em http://localhost:8000/docs.
 
 
-### Testando
+# Docker compose
+Também é possível executar utilizando o docker compose, para caso não tenha instalado o Makefile, ou se apenas preferir utilizar o compose.
+Apenas rode o comando a seguir e todos os 3 serviços serão executados em ordem.
+```bash
+docker compose up
+```
+Após o Keycloak executar, será possível acessá-lo pela url http://localhost:8080. O usuário e senha são "admin", "admin", respectivamente.
+A API estará escutando a porta 8000, logo o Swagger estará acessível em http://localhost:8000/docs.
+
+## Testando
 Na API, teremos o CRUD de clientes, e mais três endpoints para manipulação da lista de favoritos. Um para consultar (por cliente), um para adicionar e outro para remover. Temos também um endpoint para buscar os produtos que estão mockados em products.json, na raiz do repositório.
 
 É necessário a autenticação, então como citado acima, utilizando o usuário e senha john.doe e passw. Como utilizamos o Keycloak como autentiacdor OAuth2, é necessário passar também o client_id e o client_secret. Provavelmente, já estará preenchido, caso contrário, os valores estão no .env nas variáveis KEYCLOAK_CLIENT_ID e KEYCLOAK_CLIENT_SECRET.

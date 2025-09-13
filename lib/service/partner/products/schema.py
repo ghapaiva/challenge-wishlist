@@ -6,4 +6,4 @@ class ProductBase(BaseModel):
     id: uuid.UUID
     title: str
     image: str
-    price: str
+    price: float

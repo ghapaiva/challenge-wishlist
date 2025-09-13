@@ -21,7 +21,6 @@ def upgrade() -> None:
                     sa.Column('id', sa.UUID(), autoincrement=False, nullable=False),
                     sa.Column('customer_id', sa.UUID(), nullable=False, comment="Customer's id fk"),
                     sa.Column('product_id', sa.UUID(), nullable=False, comment="Product's id fk"),
-                    sa.Column('is_deleted', sa.BOOLEAN(), nullable=False, comment='Document is deleted'),
                     sa.Column('created_at', sa.TIMESTAMP(), nullable=False),
                     sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
                     sa.PrimaryKeyConstraint('id', name='customer_wishlists_pkey'),

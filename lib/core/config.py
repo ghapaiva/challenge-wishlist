@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     DATABASE_PASSWORD: str = ""
 
     KEYCLOAK_BASE_URL: str
+    KEYCLOAK_PUBLIC_BASE_URL: str
     KEYCLOAK_REALM: str
     KEYCLOAK_CLIENT_ID: str
     KEYCLOAK_CLIENT_SECRET: str = ""
@@ -25,17 +26,12 @@ class Settings(BaseSettings):
 
     @validator("INSTANCE_APP_CONFIG", pre=True)
     def assemble_swagger_oauth2(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
-        if values.get("TESTING"):
-            return {
-                "title": "Wishlist API",
-                "swagger_ui_init_oauth": {
-                    "clientId": values.get("KEYCLOAK_CLIENT_ID"),
-                    "clientSecret": values.get("KEYCLOAK_CLIENT_SECRET"),
-                },
-            }
         return {
             "title": "Wishlist API",
-            "root_path": values.get("PATH_PREFIX"),
+            "swagger_ui_init_oauth": {
+                "clientId": values.get("KEYCLOAK_CLIENT_ID"),
+                "clientSecret": values.get("KEYCLOAK_CLIENT_SECRET"),
+            },
         }
 
     DATABASE_ORM_MAX_OVERFLOW: int = 10

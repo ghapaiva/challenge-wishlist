@@ -24,7 +24,7 @@ def upgrade() -> None:
                     sa.Column('created_at', sa.TIMESTAMP(), nullable=False),
                     sa.Column('updated_at', sa.TIMESTAMP(), nullable=False),
                     sa.PrimaryKeyConstraint('id', name='customer_wishlists_pkey'),
-                    sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], name='customer_wishlists__customer_id_fkey'),
+                    sa.ForeignKeyConstraint(['customer_id'], ['customers.id'], name='customer_wishlists__customer_id_fkey', ondelete='CASCADE'),
                     sa.UniqueConstraint('customer_id', 'product_id')
                     )
 

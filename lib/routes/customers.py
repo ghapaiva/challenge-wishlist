@@ -8,6 +8,7 @@ from lib.entities.customer.repository import CRUDCustomer
 from lib.entities.customer.schema import CustomerBase, CustomerCreateBase, CustomerResponseBase
 from lib.entities.customer_wishlist.repository import CRUDCustomerWishlist
 from lib.entities.customer_wishlist.schema import CustomerWishlistBase, CustomerWishlistCreateBase, CustomerWishlistResponseBase
+from lib.middlewares.AuthMiddleware import AuthMiddleware
 from lib.service.partner.products.repository import PartnerProductService
 from lib.service.partner.products.schema import ProductBase
 
@@ -16,7 +17,8 @@ router = APIRouter(tags=["Customer"], prefix="/customers")
 
 @router.get("", response_model=List[CustomerResponseBase])
 def show_customers(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     return CRUDCustomer().get_all(db=db)
 
@@ -25,6 +27,7 @@ def show_customers(
 def show_customer(
     id: uuid.UUID,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     return CRUDCustomer().get(db=db, id=id)
 
@@ -33,6 +36,7 @@ def show_customer(
 def create_customer(
     payload: CustomerCreateBase,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     if CRUDCustomer().get_by_email(db=db, email=payload.email):
         raise HTTPException(409, f"This e-mail is already in database.")
@@ -45,6 +49,7 @@ def update_customer(
     id: uuid.UUID,
     payload: CustomerCreateBase,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     crud_customer: CRUDCustomer = CRUDCustomer()
     if not crud_customer.get(db=db, id=id):
@@ -60,6 +65,7 @@ def update_customer(
 def remove_customer(
     id: uuid.UUID,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     crud_customer: CRUDCustomer = CRUDCustomer()
     if not crud_customer.get(db=db, id=id):
@@ -72,6 +78,7 @@ def remove_customer(
 def get_customer_wishlist(
     id: uuid.UUID,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     crud_customer: CRUDCustomer = CRUDCustomer()
     crud_customer_wishlist: CRUDCustomerWishlist = CRUDCustomerWishlist()
@@ -95,6 +102,7 @@ def create_customer_wishlist(
     id: uuid.UUID,
     product_id: uuid.UUID,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     crud_customer: CRUDCustomer = CRUDCustomer()
     crud_customer_wishlist: CRUDCustomerWishlist = CRUDCustomerWishlist()
@@ -123,6 +131,7 @@ def remove_customer_wishlist(
     id: uuid.UUID,
     product_id: uuid.UUID,
     db: Session = Depends(get_db),
+    _=Depends(AuthMiddleware())
 ):
     crud_customer: CRUDCustomer = CRUDCustomer()
     crud_customer_wishlist: CRUDCustomerWishlist = CRUDCustomerWishlist()

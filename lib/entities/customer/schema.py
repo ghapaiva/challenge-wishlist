@@ -5,7 +5,7 @@ from typing import Optional
 
 from lib.entities._base.schema import (
     ModelBase,
-    ResponseBase,
+    ResponseBase
 )
 
 
